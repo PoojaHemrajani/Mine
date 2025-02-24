@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: url('https://images.unsplash.com/photo-1521747116042-e1698f208e7c') no-repeat center center fixed;
+            background: url('https://unsplash.com/photos/man-and-woman-holding-each-others-hands-_-prYEEf0v4') no-repeat center center fixed;
             background-size: cover;
             display: flex;
             justify-content: center;
@@ -131,21 +131,14 @@
     <div class="hearts" id="hearts"></div>
     <div class="falling-shapes" id="fallingShapes"></div>
 
-    <audio id="backgroundMusic" autoplay loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-
-    <!-- Add Channa Mereya audio -->
-    <audio id="channaMereya" autoplay loop>
-        <source src="your-audio-file-path-here.mp3" type="audio/mpeg">
+    <audio id="backgroundMusic">
+        <source src="https://soundcloud.com/user-882933806/channa-mereya-arijit-singh-slowed-reverbed" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
     <script>
         const heartStyles = ['#ff69b4', '#ff3385', '#ff1493', '#ff69b4'];
         const music = document.getElementById('backgroundMusic');
-        const channaMereya = document.getElementById('channaMereya');
         let heartsInterval, fallingShapesInterval;
 
         function showLove() {
@@ -156,7 +149,7 @@
 
             if (name) {
                 message.style.display = 'block';
-                message.innerHTML = `I love ${name} ❤️`;
+                message.innerHTML = I love ${name} ❤️;
 
                 // Trigger random heart animations
                 clearInterval(heartsInterval);
@@ -164,8 +157,8 @@
                     const heart = document.createElement('div');
                     heart.classList.add('heart');
                     heart.style.backgroundColor = heartStyles[Math.floor(Math.random() * heartStyles.length)];
-                    heart.style.animationDelay = `${Math.random() * 2}s`;
-                    heart.style.left = `${Math.random() * 100}%`;
+                    heart.style.animationDelay = ${Math.random() * 2}s;
+                    heart.style.left = ${Math.random() * 100}%;
                     hearts.appendChild(heart);
                 }, 300);
 
@@ -175,13 +168,13 @@
                     const shapeType = Math.random() > 0.5 ? 'falling-pentagon' : 'heart';
                     const fallingShape = document.createElement('div');
                     fallingShape.classList.add(shapeType);
-                    fallingShape.style.left = `${Math.random() * 100}%`;
-                    fallingShape.style.animationDelay = `${Math.random() * 2}s`;
+                    fallingShape.style.left = ${Math.random() * 100}%;
+                    fallingShape.style.animationDelay = ${Math.random() * 2}s;
                     fallingShapes.appendChild(fallingShape);
                 }, 500);
 
-                // Play Channa Mereya
-                channaMereya.play();
+                // Play random music
+                music.play();
             } else {
                 message.style.display = 'none';
             }
