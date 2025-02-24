@@ -131,14 +131,21 @@
     <div class="hearts" id="hearts"></div>
     <div class="falling-shapes" id="fallingShapes"></div>
 
-    <audio id="backgroundMusic">
-        <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+    <audio id="backgroundMusic" autoplay loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Add Channa Mereya audio -->
+    <audio id="channaMereya" autoplay loop>
+        <source src="your-audio-file-path-here.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
     <script>
         const heartStyles = ['#ff69b4', '#ff3385', '#ff1493', '#ff69b4'];
         const music = document.getElementById('backgroundMusic');
+        const channaMereya = document.getElementById('channaMereya');
         let heartsInterval, fallingShapesInterval;
 
         function showLove() {
@@ -173,8 +180,8 @@
                     fallingShapes.appendChild(fallingShape);
                 }, 500);
 
-                // Play random music
-                music.play();
+                // Play Channa Mereya
+                channaMereya.play();
             } else {
                 message.style.display = 'none';
             }
