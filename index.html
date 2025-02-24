@@ -3,39 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Love Message</title>
+    <title>Greeting Page</title>
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #ffebf0;
             font-family: Arial, sans-serif;
-            font-size: 3rem;
-            color: #d63384;
-            transition: all 0.5s ease-in-out;
+            text-align: center;
+            margin: 50px;
+            background-color: #ffe6e6;
+            overflow: hidden;
+        }
+        .hidden {
+            display: none;
+        }
+        @keyframes fall {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        .heart {
+            position: absolute;
+            color: red;
+            font-size: 24px;
+            animation: fall 5s linear infinite;
+        }
+        .container {
+            margin-top: 100px;
         }
         button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 1.5rem;
-            background-color: #d63384;
+            background-color: #ff4d4d;
             color: white;
             border: none;
-            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
             cursor: pointer;
+            margin: 10px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #cc0000;
+        }
+        input, textarea {
+            padding: 10px;
+            border: 2px solid #ff4d4d;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 300px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
-    <div id="message">Hi</div>
-    <button onclick="changeMessage()">Click Me</button>
-
+    <div class="container">
+        <h1>Enter Your Name</h1>
+        <input type="text" id="username" placeholder="Your name here">
+        <button onclick="showGreeting()">Submit</button>
+        
+        <h2 id="greeting" class="hidden"></h2>
+        <button id="loveButton" class="hidden" onclick="showLove()">Proceed</button>
+        
+        <h2 id="loveMessage" class="hidden"></h2>
+        <button id="revertButton" class="hidden" onclick="revertGame()">Revert</button>
+        
+        <div id="commentSection" class="hidden">
+            <h3>Leave a comment:</h3>
+            <textarea id="comment" placeholder="Your comment here"></textarea>
+            <button onclick="sendEmail()">Send</button>
+        </div>
+    </div>
+    
     <script>
-        function changeMessage() {
-            document.getElementById("message").innerText = "I love you";
+        function showGreeting() {
+            let name = document.getElementById('username').value;
+            if (name.trim() !== "") {
+                document.getElementById('greeting').innerText = "Hi " + name;
+                document.getElementById('greeting').classList.remove('hidden');
+                document.getElementById('loveButton').classList.remove('hidden');
+            }
+        }
+
+        function showLove() {
+            let name = document.getElementById('username').value;
+            document.getElementById('greeting').classList.add('hidden');
+            document.getElementById('loveButton').classList.add('hidden');
+            document.getElementById('loveMessage').innerText = "I love you " + name + " ❤️";
+            document.getElementById('loveMessage').classList.remove('hidden');
+            document.getElementById('revertButton').classList.remove('hidden');
+            document.getElementById('commentSection').classList.remove('hidden');
+            generateHearts();
+        }
+        
+        function revertGame() {
+            document.getElementById('greeting').classList.remove('hidden');
+            document.getElementById('loveMessage').classList.add('hidden');
+            document.getElementById('loveButton').classList.remove('hidden');
+            document.getElementById('revertButton').classList.add('hidden');
+            document.getElementById('commentSection').classList.add('hidden');
+        }
+        
+        function generateHearts() {
+            for (let i = 0; i < 20; i++) {
+                let heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                heart.style.fontSize = (Math.random() * 10 + 10) + 'px';
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 5000);
+            }
+        }
+        
+        function sendEmail() {
+            let name = document.getElementById('username').value;
+            let comment = document.getElementById('comment').value;
+            let email = "your-email@example.com";
+            let subject = "New Comment from " + name;
+            let body = "Name: " + name + "\nComment: " + comment;
+            window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         }
     </script>
 </body>
