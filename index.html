@@ -3,123 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Greeting Page</title>
+    <title>Love Greeting</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background: url('https://images.unsplash.com/photo-1521747116042-e1698f208e7c') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
             text-align: center;
-            margin: 50px;
-            background-color: #ffe6e6;
             overflow: hidden;
+            position: relative;
+            color: white;
         }
-        .hidden {
-            display: none;
+
+        h1 {
+            font-size: 3rem;
+            color: #ff69b4;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
         }
-        @keyframes fall {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(100vh); opacity: 0; }
+
+        input {
+            padding: 10px;
+            font-size: 1rem;
+            border: 2px solid #ff69b4;
+            border-radius: 5px;
+            width: 200px;
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            color: #333;
         }
-        .heart {
-            position: absolute;
-            color: red;
-            font-size: 24px;
-            animation: fall 5s linear infinite;
-        }
-        .container {
-            margin-top: 100px;
-        }
+
         button {
-            background-color: #ff4d4d;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #ff69b4;
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 16px;
+            border-radius: 5px;
             cursor: pointer;
-            margin: 10px;
-            border-radius: 5px;
         }
+
         button:hover {
-            background-color: #cc0000;
+            background-color: #ff3385;
         }
-        input, textarea {
-            padding: 10px;
-            border: 2px solid #ff4d4d;
-            border-radius: 5px;
-            width: 80%;
-            max-width: 300px;
-            margin-bottom: 10px;
+
+        .message {
+            font-size: 1.5rem;
+            margin-top: 20px;
+            display: none;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        .hearts, .falling-shapes {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            background-color: red;
+            clip-path: polygon(50% 0%, 100% 30%, 80% 100%, 20% 100%, 0% 30%);
+            animation: heartAnimation 1.5s infinite;
+            opacity: 0;
+        }
+
+        .falling-pentagon {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #ff69b4;
+            clip-path: polygon(50% 0%, 100% 25%, 81% 75%, 19% 75%, 0% 25%);
+            animation: fallingAnimation 4s ease-in-out infinite;
+        }
+
+        @keyframes heartAnimation {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fallingAnimation {
+            0% {
+                top: -50px;
+                transform: rotate(0deg);
+            }
+            100% {
+                top: 100vh;
+                transform: rotate(360deg);
+            }
+        }
+
+        audio {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Enter Your Name</h1>
-        <input type="text" id="username" placeholder="Your name here">
-        <button onclick="showGreeting()">Submit</button>
-        
-        <h2 id="greeting" class="hidden"></h2>
-        <button id="loveButton" class="hidden" onclick="showLove()">Proceed</button>
-        
-        <h2 id="loveMessage" class="hidden"></h2>
-        <button id="revertButton" class="hidden" onclick="revertGame()">Revert</button>
-        
-        <div id="commentSection" class="hidden">
-            <h3>Leave a comment:</h3>
-            <textarea id="comment" placeholder="Your comment here"></textarea>
-            <button onclick="sendEmail()">Send</button>
-        </div>
-    </div>
-    
+
+    <h1>Hi! Enter Your Name</h1>
+    <input type="text" id="nameInput" placeholder="Your name">
+    <button onclick="showLove()">Click Me</button>
+
+    <div class="message" id="message"></div>
+    <div class="hearts" id="hearts"></div>
+    <div class="falling-shapes" id="fallingShapes"></div>
+
+    <audio id="backgroundMusic">
+        <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
     <script>
-        function showGreeting() {
-            let name = document.getElementById('username').value;
-            if (name.trim() !== "") {
-                document.getElementById('greeting').innerText = "Hi " + name;
-                document.getElementById('greeting').classList.remove('hidden');
-                document.getElementById('loveButton').classList.remove('hidden');
-            }
-        }
+        const heartStyles = ['#ff69b4', '#ff3385', '#ff1493', '#ff69b4'];
+        const music = document.getElementById('backgroundMusic');
+        let heartsInterval, fallingShapesInterval;
 
         function showLove() {
-            let name = document.getElementById('username').value;
-            document.getElementById('greeting').classList.add('hidden');
-            document.getElementById('loveButton').classList.add('hidden');
-            document.getElementById('loveMessage').innerText = "I love you " + name + " ❤️";
-            document.getElementById('loveMessage').classList.remove('hidden');
-            document.getElementById('revertButton').classList.remove('hidden');
-            document.getElementById('commentSection').classList.remove('hidden');
-            generateHearts();
-        }
-        
-        function revertGame() {
-            document.getElementById('greeting').classList.remove('hidden');
-            document.getElementById('loveMessage').classList.add('hidden');
-            document.getElementById('loveButton').classList.remove('hidden');
-            document.getElementById('revertButton').classList.add('hidden');
-            document.getElementById('commentSection').classList.add('hidden');
-        }
-        
-        function generateHearts() {
-            for (let i = 0; i < 20; i++) {
-                let heart = document.createElement('div');
-                heart.className = 'heart';
-                heart.innerHTML = '❤️';
-                heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                heart.style.fontSize = (Math.random() * 10 + 10) + 'px';
-                document.body.appendChild(heart);
-                setTimeout(() => heart.remove(), 5000);
+            const name = document.getElementById('nameInput').value;
+            const message = document.getElementById('message');
+            const hearts = document.getElementById('hearts');
+            const fallingShapes = document.getElementById('fallingShapes');
+
+            if (name) {
+                message.style.display = 'block';
+                message.innerHTML = `I love ${name} ❤️`;
+
+                // Trigger random heart animations
+                clearInterval(heartsInterval);
+                heartsInterval = setInterval(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.style.backgroundColor = heartStyles[Math.floor(Math.random() * heartStyles.length)];
+                    heart.style.animationDelay = `${Math.random() * 2}s`;
+                    heart.style.left = `${Math.random() * 100}%`;
+                    hearts.appendChild(heart);
+                }, 300);
+
+                // Trigger falling pentagons and red hearts
+                clearInterval(fallingShapesInterval);
+                fallingShapesInterval = setInterval(() => {
+                    const shapeType = Math.random() > 0.5 ? 'falling-pentagon' : 'heart';
+                    const fallingShape = document.createElement('div');
+                    fallingShape.classList.add(shapeType);
+                    fallingShape.style.left = `${Math.random() * 100}%`;
+                    fallingShape.style.animationDelay = `${Math.random() * 2}s`;
+                    fallingShapes.appendChild(fallingShape);
+                }, 500);
+
+                // Play random music
+                music.play();
+            } else {
+                message.style.display = 'none';
             }
         }
-        
-        function sendEmail() {
-            let name = document.getElementById('username').value;
-            let comment = document.getElementById('comment').value;
-            let email = "pujahem24@gmail.com";
-            let subject = "New Comment from " + name;
-            let body = "Name: " + name + "\nComment: " + comment;
-            window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        }
     </script>
+
 </body>
 </html>
