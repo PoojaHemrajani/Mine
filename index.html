@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: url('https://unsplash.com/photos/man-and-woman-holding-each-others-hands-_-prYEEf0v4') no-repeat center center fixed;
+            background: url('https://images.unsplash.com/photo-1521747116042-e1698f208e7c') no-repeat center center fixed;
             background-size: cover;
             display: flex;
             justify-content: center;
@@ -60,7 +60,7 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
         }
 
-        .hearts, .falling-shapes {
+        .hearts, .falling-hearts {
             position: absolute;
             top: 0;
             left: 50%;
@@ -81,15 +81,6 @@
             opacity: 0;
         }
 
-        .falling-pentagon {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background-color: #ff69b4;
-            clip-path: polygon(50% 0%, 100% 25%, 81% 75%, 19% 75%, 0% 25%);
-            animation: fallingAnimation 4s ease-in-out infinite;
-        }
-
         @keyframes heartAnimation {
             0% {
                 transform: scale(0);
@@ -102,17 +93,6 @@
             100% {
                 transform: scale(0);
                 opacity: 0;
-            }
-        }
-
-        @keyframes fallingAnimation {
-            0% {
-                top: -50px;
-                transform: rotate(0deg);
-            }
-            100% {
-                top: 100vh;
-                transform: rotate(360deg);
             }
         }
 
@@ -129,27 +109,27 @@
 
     <div class="message" id="message"></div>
     <div class="hearts" id="hearts"></div>
-    <div class="falling-shapes" id="fallingShapes"></div>
+    <div class="falling-hearts" id="fallingHearts"></div>
 
-    <audio id="backgroundMusic">
-        <source src="https://soundcloud.com/user-882933806/channa-mereya-arijit-singh-slowed-reverbed" type="audio/mpeg">
+    <audio id="backgroundMusic" autoplay>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
     <script>
         const heartStyles = ['#ff69b4', '#ff3385', '#ff1493', '#ff69b4'];
         const music = document.getElementById('backgroundMusic');
-        let heartsInterval, fallingShapesInterval;
+        let heartsInterval, fallingHeartsInterval;
 
         function showLove() {
             const name = document.getElementById('nameInput').value;
             const message = document.getElementById('message');
             const hearts = document.getElementById('hearts');
-            const fallingShapes = document.getElementById('fallingShapes');
+            const fallingHearts = document.getElementById('fallingHearts');
 
             if (name) {
                 message.style.display = 'block';
-                message.innerHTML = I love ${name} ❤️;
+                message.innerHTML = `I love ${name} ❤️`;
 
                 // Trigger random heart animations
                 clearInterval(heartsInterval);
@@ -157,23 +137,22 @@
                     const heart = document.createElement('div');
                     heart.classList.add('heart');
                     heart.style.backgroundColor = heartStyles[Math.floor(Math.random() * heartStyles.length)];
-                    heart.style.animationDelay = ${Math.random() * 2}s;
-                    heart.style.left = ${Math.random() * 100}%;
+                    heart.style.animationDelay = `${Math.random() * 2}s`;
+                    heart.style.left = `${Math.random() * 100}%`;
                     hearts.appendChild(heart);
                 }, 300);
 
-                // Trigger falling pentagons and red hearts
-                clearInterval(fallingShapesInterval);
-                fallingShapesInterval = setInterval(() => {
-                    const shapeType = Math.random() > 0.5 ? 'falling-pentagon' : 'heart';
-                    const fallingShape = document.createElement('div');
-                    fallingShape.classList.add(shapeType);
-                    fallingShape.style.left = ${Math.random() * 100}%;
-                    fallingShape.style.animationDelay = ${Math.random() * 2}s;
-                    fallingShapes.appendChild(fallingShape);
+                // Trigger falling hearts
+                clearInterval(fallingHeartsInterval);
+                fallingHeartsInterval = setInterval(() => {
+                    const fallingHeart = document.createElement('div');
+                    fallingHeart.classList.add('heart');
+                    fallingHeart.style.left = `${Math.random() * 100}%`;
+                    fallingHeart.style.animationDelay = `${Math.random() * 2}s`;
+                    fallingHearts.appendChild(fallingHeart);
                 }, 500);
 
-                // Play random music
+                // Play music
                 music.play();
             } else {
                 message.style.display = 'none';
