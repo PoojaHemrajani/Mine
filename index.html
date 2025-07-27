@@ -1,164 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Love Greeting</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: url('https://images.unsplash.com/photo-1521747116042-e1698f208e7c') no-repeat center center fixed;
-            background-size: cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            flex-direction: column;
-            text-align: center;
-            overflow: hidden;
-            position: relative;
-            color: white;
-        }
-
-        h1 {
-            font-size: 3rem;
-            color: #ff69b4;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
-        }
-
-        input {
-            padding: 10px;
-            font-size: 1rem;
-            border: 2px solid #ff69b4;
-            border-radius: 5px;
-            width: 200px;
-            margin-bottom: 20px;
-            background-color: rgba(255, 255, 255, 0.7);
-            color: #333;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 1rem;
-            background-color: #ff69b4;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #ff3385;
-        }
-
-        .message {
-            font-size: 1.5rem;
-            margin-top: 20px;
-            display: none;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
-        }
-
-        .hearts, .falling-hearts {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .heart {
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            width: 30px;
-            height: 30px;
-            background-color: red;
-            clip-path: polygon(50% 0%, 100% 30%, 80% 100%, 20% 100%, 0% 30%);
-            animation: heartAnimation 1.5s infinite;
-            opacity: 0;
-        }
-
-        @keyframes heartAnimation {
-            0% {
-                transform: scale(0);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1);
-                opacity: 0.7;
-            }
-            100% {
-                transform: scale(0);
-                opacity: 0;
-            }
-        }
-
-        audio {
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>🎈 My Pookie's Birthday 🎈</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom right, #ffe0f0, #ffc9de);
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow-x: hidden;
+    }
+    #app {
+      max-width: 700px;
+      padding: 20px;
+      position: relative;
+      z-index: 10;
+    }
+    h1 {
+      color: #ff4f87;
+      font-size: 2em;
+    }
+    #timer {
+      font-size: 1.5em;
+      margin: 20px 0;
+      color: #ff6f91;
+    }
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 15px;
+      width: 150px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      user-select: none;
+    }
+    .card:hover {
+      transform: scale(1.05);
+    }
+    .answer {
+      color: #555;
+      margin-top: 10px;
+      display: none;
+    }
+    #birthday-message {
+      display: none;
+      font-size: 1.8em;
+      color: #ff3c6f;
+      margin-top: 30px;
+    }
+    @media (max-width: 500px) {
+      .card {
+        width: 100%;
+      }
+    }
+    .heart {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      background: red;
+      transform: rotate(45deg);
+      animation: float 6s infinite ease-in;
+      z-index: 5;
+      pointer-events: none;
+    }
+    .heart:before, .heart:after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      border-radius: 50%;
+    }
+    .heart:before { top: -10px; left: 0; }
+    .heart:after  { top: 0; left: -10px; }
+    @keyframes float {
+      0% { bottom: -10px; opacity: 0; }
+      50% { opacity: 1; }
+      100% { bottom: 100%; opacity: 0; }
+    }
+  </style>
 </head>
 <body>
+  <div id="app">
+    <div id="headline"><h1>⏳ Countdown to Midnight IST!</h1></div>
+    <div id="timer"></div>
+    <div class="card-container" id="qaSection"></div>
+    <div id="birthdayMessage">
+      🎉 Happiest Birthday Pookie! 🎉<br />
+      God blessed me with the best one ever ❤️💖
+    </div>
+  </div>
 
-    <h1>Hi! Enter Your Name</h1>
-    <input type="text" id="nameInput" placeholder="Your name">
-    <button onclick="showLove()">Click Me</button>
+  <script>
+    // Helper: Get IST midnight time on July 27, 2025 23:59:59 IST
+    // IST is UTC+5:30, so 23:59:59 IST = 18:29:59 UTC
+    function getISTMidnightDate(year, month, day) {
+      return new Date(Date.UTC(year, month, day, 18, 29, 59));
+    }
 
-    <div class="message" id="message"></div>
-    <div class="hearts" id="hearts"></div>
-    <div class="falling-hearts" id="fallingHearts"></div>
+    // Target countdown date: July 27, 2025 23:59:59 IST
+    //const revealTime = getISTMidnightDate(2025, 6, 27); // Month July = 6 (0-based)
+    //const revealTime = new Date(Date.now() + 10 * 1000); // 10 seconds from now
+    const revealTime = new Date(2025, 6, 27); // Months are zero-based: 0 = Jan, so 6 = July
 
-    <audio id="backgroundMusic" autoplay>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+    // ** FOR TESTING ONLY **
+    // Uncomment the next line to test the countdown immediately (10 seconds from now)
+    // const revealTime = new Date(Date.now() + 10 * 1000);
 
-    <script>
-        const heartStyles = ['#ff69b4', '#ff3385', '#ff1493', '#ff69b4'];
-        const music = document.getElementById('backgroundMusic');
-        let heartsInterval, fallingHeartsInterval;
+    const timerEl = document.getElementById("timer");
+    const headlineDiv = document.getElementById("headline");
+    const birthdayMessage = document.getElementById("birthdayMessage");
+    const qaSection = document.getElementById("qaSection");
 
-        function showLove() {
-            const name = document.getElementById('nameInput').value;
-            const message = document.getElementById('message');
-            const hearts = document.getElementById('hearts');
-            const fallingHearts = document.getElementById('fallingHearts');
+    // Updated Q&A cards with emojis & friendly tone
+    const cards = [
+      { q: "You always ask what you are for me?", a: "You're the reason I smile, laugh, and feel alive. You fixed things you never even broke 💖" },
+      { q: "Why are you so special?", a: "Because you made me feel like maybe I’m special too ✨" },
+      { q: "If I had one wish?", a: "I’d wish I met you way earlier... and never had to miss a moment with you 🌙" },
+      { q: "How lucky am I?", a: "Luckier than the stars having the night sky 🌌" },
+      { q: "If you could grant one wish?", a: "Just never leave me, no matter what. I don’t know if it’s love or more... but I can’t go a day without you 😔❤️" },
+    ];
 
-            if (name) {
-                message.style.display = 'block';
-                message.innerHTML = `I love ${name} ❤️`;
+    function renderCards() {
+      qaSection.innerHTML = "";
+      cards.forEach((item, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="question">${item.q}</div>
+          <div class="answer" id="answer-${index}">${item.a}</div>
+        `;
+        card.onclick = () => {
+          const ans = document.getElementById(`answer-${index}`);
+          ans.style.display = ans.style.display === "block" ? "none" : "block";
+        };
+        qaSection.appendChild(card);
+      });
+    }
 
-                // Trigger random heart animations
-                clearInterval(heartsInterval);
-                heartsInterval = setInterval(() => {
-                    const heart = document.createElement('div');
-                    heart.classList.add('heart');
-                    heart.style.backgroundColor = heartStyles[Math.floor(Math.random() * heartStyles.length)];
-                    heart.style.animationDelay = `${Math.random() * 2}s`;
-                    heart.style.left = `${Math.random() * 100}%`;
-                    hearts.appendChild(heart);
-                }, 300);
+    function updateTimer() {
+      const now = new Date();
+      const diff = revealTime - now;  // difference in milliseconds
 
-                // Trigger falling hearts
-                clearInterval(fallingHeartsInterval);
-                fallingHeartsInterval = setInterval(() => {
-                    const fallingHeart = document.createElement('div');
-                    fallingHeart.classList.add('heart');
-                    fallingHeart.style.left = `${Math.random() * 100}%`;
-                    fallingHeart.style.animationDelay = `${Math.random() * 2}s`;
-                    fallingHearts.appendChild(fallingHeart);
-                }, 500);
+      if (diff <= 0) {
+        triggerBirthday();
+      } else {
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const mins = Math.floor((diff / (1000 * 60)) % 60);
+        const secs = Math.floor((diff / 1000) % 60);
+        timerEl.textContent = `${hours}h ${mins}m ${secs}s remaining`;
+        birthdayMessage.style.display = "none";
+      }
+    }
 
-                // Play music
-                music.play();
-            } else {
-                message.style.display = 'none';
-            }
-        }
-    </script>
+    function triggerBirthday() {
+      //clearInterval(timerInterval);
+      timerEl.style.display = "none";
+      headlineDiv.style.display = "none";
+      qaSection.style.display = "none";
+      birthdayMessage.style.display = "block";
+      generateHearts();
+    }
 
+    function generateHearts() {
+      for (let i = 0; i < 40; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.bottom = "-20px";
+        heart.style.animationDelay = Math.random() * 5 + "s";
+        document.body.appendChild(heart);
+      }
+    }
+
+    // Initialize
+    renderCards();
+    updateTimer();
+    const timerInterval = setInterval(updateTimer, 1000);
+  </script>
 </body>
 </html>
